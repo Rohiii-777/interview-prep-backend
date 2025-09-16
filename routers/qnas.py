@@ -6,7 +6,7 @@ from schemas import QnaCreate, QnaRead, QnaUpdate
 from typing import List, Optional
 from sqlalchemy import text
 from services.search import simple_search
-from services.embeddings import add_to_index, update_in_index, remove_from_index,semantic_search
+# from services.embeddings import add_to_index, update_in_index, remove_from_index,semantic_search
 
 router = APIRouter(prefix="/qnas", tags=["QnAs"])
 
@@ -25,7 +25,7 @@ def create_qna(payload: QnaCreate, db: Session = Depends(get_db)):
     db.add(db_q)
     db.commit()
     db.refresh(db_q)
-    add_to_index(db_q)
+    # add_to_index(db_q)
     return db_q
 
 
@@ -74,7 +74,8 @@ def list_qnas(
 ):
     # Semantic search first
     if search:
-        results = semantic_search(search, db, top_k=limit)
+        results = None
+        # results = semantic_search(search, db, top_k=limit)
         if results:   # ✅ semantic found results
             return results
         # fallback to LIKE if semantic empty
@@ -114,7 +115,7 @@ def update_qna(qna_id: int, payload: QnaUpdate, db: Session = Depends(get_db)):
 
     db.commit()
     db.refresh(q)
-    update_in_index(q)
+    # update_in_index(q)
     return q
 
 
@@ -126,7 +127,7 @@ def delete_qna(qna_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="QnA not found")
     db.delete(q)
     db.commit()
-    remove_from_index(q.id)
+    # remove_from_index(q.id)
 
 @router.patch("/{qna_id}/bookmark", response_model=QnaRead)
 def toggle_bookmark(qna_id: int, db: Session = Depends(get_db)):

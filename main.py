@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db import init_db
-from routers import categories, qnas,ai, bulk
+from routers import categories, qnas, bulk
 
 app = FastAPI(title="QnA Backend - FastAPI",debug=True)
 
@@ -21,7 +21,7 @@ def startup_event():
 # Routers
 app.include_router(categories.router)
 app.include_router(qnas.router)
-app.include_router(ai.router)
+# app.include_router(ai.router)
 app.include_router(bulk.router)
 
 @app.get("/")
